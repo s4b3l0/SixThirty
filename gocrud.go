@@ -24,7 +24,6 @@ func main() {
 }
 
 func saveCredentials(writer http.ResponseWriter, request *http.Request) {
-	fmt.Printf(domain.Something)
 	var cred = domain.Credential{
 		Username: "",
 		Email:    "",
