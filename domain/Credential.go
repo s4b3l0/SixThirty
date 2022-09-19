@@ -1,9 +1,9 @@
 package domain
 
 type Credential struct {
-	Username string
-	Email    string
-	Password string
+	Username     string `json:"username" gorm:"primaryKey"`
+	Email        string `json:"email"`
+	UserPassword string `json:"user_password"`
 }
 
 //func Signup(db *gorm.DB, req *http.Request) (*http.Request, error) {
