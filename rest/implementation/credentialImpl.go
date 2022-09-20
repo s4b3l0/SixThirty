@@ -57,7 +57,7 @@ func GetCredential(writer http.ResponseWriter, request *http.Request) {
 	}
 }
 
-func GetAll(writer http.ResponseWriter, r *http.Request) {
+func GetAll(writer http.ResponseWriter, _ *http.Request) {
 	var creds []domain.Credential
 	configuration.Pdatabase.Find(&creds)
 	response(writer, creds)
