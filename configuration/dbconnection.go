@@ -9,7 +9,6 @@ import (
 
 func dbConn() (db *gorm.DB, err error) {
 	return gorm.Open(postgres.New(postgres.Config{
-
 		DSN:                  "host=localhost dbname=postgres port=5432 sslmode=disable TimeZone=Africa/Johannesburg",
 		PreferSimpleProtocol: true, // disables implicit prepared statement usage
 	}), &gorm.Config{

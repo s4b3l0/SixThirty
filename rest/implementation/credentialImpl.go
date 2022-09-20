@@ -13,7 +13,7 @@ import (
 const username = "username"
 
 func SaveCredentials(writer http.ResponseWriter, request *http.Request) {
-	var crd *domain.Credential
+	var crd *domain.CredentialDTO
 	reqBody, err := io.ReadAll(request.Body)
 	if err != nil {
 		fmt.Print(err)
@@ -21,12 +21,17 @@ func SaveCredentials(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	json.Unmarshal(reqBody, &crd)
+	var cred = &domain.Credential{
+		Username: crd.Username,
+		Email:    crd.Email,
+	}
+	domain.SetPassword(cred, crd.UserPassword)
 	var value = configuration.Pdatabase.Find(&domain.Credential{Username: crd.Username})
 	if value.RowsAffected > 0 {
-		configuration.Pdatabase.Updates(*crd)
+		print(domain.Update(cred))
 		json.NewEncoder(writer).Encode(crd)
 	} else {
-		configuration.Pdatabase.Create(crd)
+		print(domain.Save(cred))
 		json.NewEncoder(writer).Encode(crd)
 	}
 }
@@ -44,7 +49,6 @@ func DeleteUser(writer http.ResponseWriter, request *http.Request) {
 func GetCredential(writer http.ResponseWriter, request *http.Request) {
 	var params = mux.Vars(request)
 	var username = params[username]
-
 	if len(username) > 0 {
 		var cred, _ = configuration.Pdatabase.Get(username)
 		response(writer, cred)
@@ -56,6 +60,34 @@ func GetAll(writer http.ResponseWriter, r *http.Request) {
 	var creds []domain.Credential
 	configuration.Pdatabase.Find(&creds)
 	response(writer, creds)
+}
+
+func Login(w http.ResponseWriter, r *http.Request) {
+	var credDto *domain.CredentialDTO
+	requestBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	} else {
+		json.Unmarshal(requestBody, &credDto)
+		var cred = domain.Credential{Email: credDto.Email}
+		configuration.Pdatabase.Find(&cred)
+		err = domain.IsPasswordDiff([]byte(cred.PasswordHash), []byte(credDto.UserPassword))
+		if err == nil {
+			print("success")
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode("logged")
+		} else {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode("fail")
+		}
+	}
+
+}
+
+func Logout(w http.ResponseWriter, r *http.Request) {
+
 }
 
 func response(writer http.ResponseWriter, value any) {

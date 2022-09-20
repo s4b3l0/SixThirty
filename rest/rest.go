@@ -11,6 +11,8 @@ func DefineEndpoints() {
 	router.HandleFunc("/save/credentials", implementation.SaveCredentials)
 	router.HandleFunc("/{username}", implementation.DeleteUser).Methods(http.MethodDelete)
 	router.HandleFunc("/{username}", implementation.GetCredential).Methods(http.MethodGet)
+	router.HandleFunc("/login", implementation.Login).Methods(http.MethodPost)
+	router.HandleFunc("/logout", implementation.Logout).Methods(http.MethodPost)
 	router.HandleFunc("/", implementation.GetAll).Methods(http.MethodGet)
 	http.Handle("/", router)
 }
