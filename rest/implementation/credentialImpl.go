@@ -1,5 +1,6 @@
 package implementation
 
+//TODO: handle errors
 import (
 	"crud.com/packages/configuration"
 	"crud.com/packages/domain"
