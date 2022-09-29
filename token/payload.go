@@ -7,7 +7,7 @@ import (
 
 type Payload struct {
 	ID        uuid2.UUID `json:"id"`
-	email     string     `json:"email"`
+	Email     string     `json:"email"`
 	IssuedAt  time.Time  `json:"issued_at"`
 	ExpiredAt time.Time  `json:"expired_at"`
 }
@@ -20,9 +20,9 @@ func NewPayload(email string, duration time.Duration) (*Payload, error) {
 
 	payload := &Payload{
 		ID:        tokenID,
-		email:     email,
-		IssuedAt:  time.Now(),
-		ExpiredAt: time.Now().Add(duration),
+		Email:     email,
+		IssuedAt:  time.Now().Local(),
+		ExpiredAt: time.Now().Local().Add(duration),
 	}
 	return payload, nil
 }
