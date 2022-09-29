@@ -113,3 +113,7 @@ func orchestrateToken(email string) string {
 	}
 	return tkn
 }
+
+func HelloWorld(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode("Hello world")
+}

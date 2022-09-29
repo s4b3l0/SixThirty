@@ -13,6 +13,7 @@ func DefineEndpoints() {
 	router.HandleFunc("/{username}", implementation.GetCredential).Methods(http.MethodGet)
 	router.HandleFunc("/login", implementation.Login).Methods(http.MethodPost)
 	router.HandleFunc("/logout", implementation.Logout).Methods(http.MethodPost)
-	router.HandleFunc("/", implementation.GetAll).Methods(http.MethodGet)
+	router.HandleFunc("/all", implementation.GetAll).Methods(http.MethodGet)
+	router.HandleFunc("/", implementation.HelloWorld).Methods(http.MethodGet)
 	http.Handle("/", router)
 }
