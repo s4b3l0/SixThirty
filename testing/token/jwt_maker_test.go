@@ -9,7 +9,7 @@ import (
 
 const testEmail string = "test@mail.com"
 
-var secretKey = []byte("secretekey")
+var secretKey = "your-256-bit-secret"
 
 func TestJwt(t *testing.T) {
 	var duration, err = time.ParseDuration("12h")

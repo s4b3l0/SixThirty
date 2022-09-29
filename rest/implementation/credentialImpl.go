@@ -4,11 +4,13 @@ package implementation
 import (
 	"crud.com/packages/configuration"
 	"crud.com/packages/domain"
+	"crud.com/packages/token"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"io"
 	"net/http"
+	"time"
 )
 
 const username = "username"
@@ -78,19 +80,36 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		if err == nil {
 			print("success")
 			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode("logged")
+			json.NewEncoder(w).Encode(orchestrateToken(credDto.Email))
 		} else {
 			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode("fail")
 		}
 	}
-
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
-
+	json.NewEncoder(w).Encode(nil)
+	//Implementation to be done
 }
 
 func response(writer http.ResponseWriter, value any) {
 	json.NewEncoder(writer).Encode(value)
+}
+
+var secretKey = "your-256-bit-secret"
+
+func orchestrateToken(email string) string {
+	var duration, err = time.ParseDuration("12h")
+	if err != nil {
+		fmt.Errorf(err.Error())
+	}
+	var maker = token.JWTMaker{}
+	var jwt, _ = maker.NewJWTMaker(secretKey)
+
+	tkn, err := jwt.CreateToken(email, duration)
+	if err != nil {
+		fmt.Errorf(err.Error())
+	}
+	return tkn
 }
